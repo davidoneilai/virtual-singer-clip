@@ -1,0 +1,23 @@
+# LatentSync inference runtime (install torch separately in isolated env).
+diffusers>=0.32.0
+transformers>=4.48.0
+decord
+accelerate
+einops
+omegaconf
+opencv-python-headless
+mediapipe
+python_speech_features
+librosa
+scenedetect
+ffmpeg-python
+imageio
+imageio-ffmpeg
+lpips
+face-alignment
+huggingface-hub
+numpy
+kornia
+insightface
+onnxruntime-gpu
+DeepCache

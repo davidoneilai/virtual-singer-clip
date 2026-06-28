@@ -1,0 +1,22 @@
+# RVC deps for rvc/conda-env (Python 3.10).
+# Run setup via: bash scripts/setup_rvc.sh
+# (setup pins pip==24.0 and installs omegaconf/hydra before this file)
+fairseq==0.12.2
+faiss-cpu==1.7.3
+pyworld==0.3.2
+praat-parselmouth>=0.4.2
+ffmpeg-python>=0.2.0
+python-dotenv>=1.0.0
+av>=10.0.0
+tensorboardX
+tensorboard
+matplotlib>=3.7.0
+tqdm>=4.63.1
+torchcrepe==0.0.20
+scipy
+librosa>=0.9.1
+soundfile>=0.12.1
+numba
+joblib
+scikit-learn
+numpy<2

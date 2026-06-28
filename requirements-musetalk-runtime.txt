@@ -1,0 +1,15 @@
+# MuseTalk inference runtime (install torch + OpenMMLab separately).
+opencv-python-headless
+einops
+omegaconf
+ffmpeg-python
+moviepy
+imageio[ffmpeg]
+gdown
+requests
+soundfile
+librosa
+tqdm
+diffusers>=0.30.0
+transformers>=4.39.0
+accelerate

@@ -1,0 +1,16 @@
+# RVC voice conversion (used with rvc/RVC checkout).
+# After install on Python 3.11, run: python scripts/patch_fairseq_py311.py
+fairseq==0.12.2
+faiss-cpu>=1.9.0
+pyworld==0.3.2
+praat-parselmouth>=0.4.2
+ffmpeg-python>=0.2.0
+python-dotenv>=1.0.0
+av>=10.0.0
+tensorboardX
+local-attention
+scipy
+librosa>=0.9.1
+soundfile>=0.12.1
+numba
+joblib

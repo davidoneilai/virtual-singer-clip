@@ -1,0 +1,19 @@
+# Minimal ACE-Step inference deps (no flash-attn / nano-vllm).
+# Use --backend pt in 01_generate_song_acestep.py when vllm is unavailable.
+#
+# transformers 5.x uses meta-device loading by default, which breaks
+# vector-quantize-pytorch ResidualFSQ during model __init__.
+transformers>=4.51.0,<4.58.0
+vector-quantize-pytorch>=1.27.15,<1.28.0
+loguru>=0.7.3
+einops>=0.8.1
+scipy>=1.10.1
+matplotlib>=3.7.5
+toml
+modelscope
+numba>=0.63.1
+xxhash
+peft>=0.18.0
+python-dotenv
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0

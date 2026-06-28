@@ -1,0 +1,12 @@
+accelerate
+demucs
+diffusers
+huggingface_hub
+imageio
+imageio-ffmpeg
+safetensors
+sentencepiece
+soundfile
+torch
+torchaudio
+transformers

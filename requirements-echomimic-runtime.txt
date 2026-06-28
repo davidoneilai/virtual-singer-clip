@@ -1,0 +1,19 @@
+# EchoMimicV2/V3 inference runtime (install torch separately).
+diffusers
+transformers
+accelerate
+einops
+omegaconf
+opencv-python-headless
+decord
+moviepy
+librosa
+soundfile
+imageio
+imageio-ffmpeg
+ffmpeg-python
+huggingface-hub
+safetensors
+pillow
+scipy
+tqdm

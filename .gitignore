@@ -1,0 +1,31 @@
+.cache/
+output/
+.venv/
+external/
+latentsync/
+rvc/
+models/
+
+# Media (local only)
+*.wav
+*.mp3
+*.mp4
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# Trained / downloaded model weights
+*.pth
+*.index
+
+# Local assets — placeholders via .gitkeep where possible
+assets/voices/**
+assets/avatars/**
+assets/references/**
+!assets/references/.gitkeep
+assets/lyrics/**
+!assets/lyrics/.gitkeep
+assets/avatar.png
+assets/avatar.mp4
