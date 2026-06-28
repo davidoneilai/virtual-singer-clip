@@ -1,32 +1,32 @@
-# Assets locais
+# Local assets
 
-Estes diretórios **não são versionados** (exceto este README e os `.gitkeep`).
-Cada usuário coloca os próprios arquivos antes de rodar o pipeline.
+These directories are **not versioned** (except this README and `.gitkeep` files).
+Add your own files before running the pipeline.
 
-## Estrutura
+## Layout
 
 ```
 assets/
-├── lyrics/              # Letra de entrada (.txt)
-├── references/<nome>/   # Clips de referência vocal (.wav) para voice conversion
-├── voices/<nome>/       # Modelos RVC treinados (model.pth, model.index) — criar localmente
-├── avatars/<variante>/  # avatar.png e/ou avatar.mp4 para lip-sync — criar localmente
-├── avatar.png           # Avatar padrão (fallback)
-└── avatar.mp4           # Vídeo avatar padrão (fallback)
+├── lyrics/              # Input lyrics (.txt)
+├── references/<name>/   # Vocal reference clips (.wav) for voice conversion
+├── voices/<name>/       # Trained RVC models (model.pth, model.index) — create locally
+├── avatars/<variant>/   # avatar.png and/or avatar.mp4 for lip-sync — create locally
+├── avatar.png           # Default avatar (fallback)
+└── avatar.mp4           # Default avatar video (fallback)
 ```
 
-As pastas `voices/` e `avatars/` são criadas pelos scripts de variantes (`mkdir -p`); não há placeholders versionados nelas.
+Variant scripts create `voices/` and `avatars/` subfolders automatically (`mkdir -p`); those folders have no versioned placeholders.
 
-## O que colocar em cada pasta
+## What goes where
 
-| Pasta | Formato | Uso |
-|-------|---------|-----|
-| `lyrics/` | `.txt` | Letra usada por `00_generate_lyrics.py` ou variantes |
-| `references/<tag>/` | `.wav` | Amostras vocais para RVC / Seed-VC |
-| `voices/<tag>/` | `.pth`, `.index` | Modelo RVC já treinado |
-| `avatars/<tag>/` | `.png`, `.mp4` | Personagem virtual para lip-sync |
+| Folder | Format | Purpose |
+|--------|--------|---------|
+| `lyrics/` | `.txt` | Lyrics for `00_generate_lyrics.py` or variants |
+| `references/<tag>/` | `.wav` | Vocal samples for RVC / Seed-VC |
+| `voices/<tag>/` | `.pth`, `.index` | Pre-trained RVC model |
+| `avatars/<tag>/` | `.png`, `.mp4` | Virtual character for lip-sync |
 
-## Aviso legal
+## Legal notice
 
-Use apenas vozes, letras e imagens que você tem direito de usar (próprias, licenciadas ou sintéticas).
-Não distribua clips de artistas reais, letras protegidas por copyright ou modelos treinados em vozes de terceiros sem autorização.
+Only use voices, lyrics, and images you have the right to use (your own, licensed, or fully synthetic).
+Do not distribute real artist clips, copyrighted lyrics, or voice models trained on third-party voices without authorization.
