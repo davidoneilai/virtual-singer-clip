@@ -1,0 +1,92 @@
+Minimalist solo violin with deep contrabass drone.
+
+Only two instruments.
+
+Solo violin.
+Contrabass drone.
+
+Nothing else.
+
+A single lonely violin drifting over an endless dark ocean.
+
+The music should feel like lost sailors who have accepted that they may never return home.
+
+No sense of adventure.
+No heroism.
+No action.
+Only isolation.
+
+The violin carries almost the entire composition.
+
+Very slow bowing.
+
+Long sustained notes.
+
+Very sparse melodies.
+
+Extremely large pauses between phrases.
+
+A deep sustained contrabass drone underneath, almost imperceptible, representing the infinite ocean.
+
+The music should breathe.
+
+Almost no harmonic movement.
+
+No crescendos.
+
+No dramatic climax.
+
+No rhythmic structure.
+
+No pulse.
+
+No tempo.
+
+No repeated patterns.
+
+No melody that sounds memorable.
+
+Only slowly evolving textures.
+
+The atmosphere is cold, empty, immense, hopeless, and contemplative.
+
+The ocean should feel endless.
+
+The silence between notes is as important as the notes themselves.
+
+NEGATIVE PROMPT
+
+NO drums
+NO percussion
+NO timpani
+NO taiko
+NO cymbals
+NO snare
+NO bass drum
+NO rhythm
+NO beat
+NO pulse
+NO ostinato
+NO electronic instruments
+NO synthesizers
+NO pads
+NO EDM
+NO trailer music
+NO hybrid orchestra
+NO brass stabs
+NO impacts
+NO risers
+NO choir
+NO vocals
+NO piano
+NO harp
+NO woodwinds
+NO brass melodies
+NO fast strings
+NO action
+NO battle
+NO pirate themes
+NO Viking themes
+NO adventure
+NO heroic music
+NO hopeful ending

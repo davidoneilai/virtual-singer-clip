@@ -1,0 +1,9 @@
+# Install (edit absolute paths / GPU first):
+#   crontab -e
+# Paste one of the lines below.
+
+# Every 3 days at 03:00 — full batch (~20 tracks x N prompts)
+0 3 */3 * * cd /raid/user_davidoneil/virtual_singer_clip && GPU=1 bash lofi_batch/run_docker.sh >> output/lofi_batch/cron.log 2>&1
+
+# Alternative: every Monday and Thursday at 02:00
+# 0 2 * * 1,4 cd /raid/user_davidoneil/virtual_singer_clip && GPU=1 bash lofi_batch/run_docker.sh >> output/lofi_batch/cron.log 2>&1
