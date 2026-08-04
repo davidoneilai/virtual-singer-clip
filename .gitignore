@@ -34,3 +34,6 @@ assets/lyrics/**
 !assets/lyrics/.gitkeep
 assets/avatar.png
 assets/avatar.mp4
+
+# Git worktrees
+.worktrees/
