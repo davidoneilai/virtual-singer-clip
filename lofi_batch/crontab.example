@@ -2,8 +2,11 @@
 #   crontab -e
 # Paste one of the lines below.
 
-# Every 3 days at 03:00 — full batch (~20 tracks x N prompts)
-0 3 */3 * * cd /raid/user_davidoneil/virtual_singer_clip && GPU=1 bash lofi_batch/run_docker.sh >> output/lofi_batch/cron.log 2>&1
+# Every day at 03:00 — generate one package + try upload (1/day cap)
+0 3 * * * cd /raid/user_davidoneil/virtual_singer_clip && GPU=1 SKIP_UPLOAD=0 bash lofi_batch/run_daily.sh >> output/lofi_batch/cron.log 2>&1
 
-# Alternative: every Monday and Thursday at 02:00
-# 0 2 * * 1,4 cd /raid/user_davidoneil/virtual_singer_clip && GPU=1 bash lofi_batch/run_docker.sh >> output/lofi_batch/cron.log 2>&1
+# Upload-only (if generation already queued): once per day
+# 30 9 * * * cd /raid/user_davidoneil/virtual_singer_clip && YOUTUBE_PRIVACY=unlisted python lofi_batch/youtube_upload.py >> output/lofi_batch/cron.log 2>&1
+
+# Alternative: leave daemon running in a screen/tmux (waits for free GPU)
+# bash lofi_batch/run_daemon.sh

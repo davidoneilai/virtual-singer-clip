@@ -1,53 +1,61 @@
-# Lo-fi playlist batch
+# Lo-fi daily YouTube pipeline
 
-Gera playlists instrumentais de ~1 hora a partir de prompts em `.txt`.
-Cada prompt vira várias faixas curtas concatenadas em um único `playlist.wav`.
+Gera um pacote Lo-Fi por run: prompt (Qwen) → playlist (ACE-Step) → capa (Wan) → MP4 estático → fila → upload YouTube (**no máximo 1 vídeo/dia**).
 
-**Fase atual:** só áudio (sem vídeo).
+## Modos
 
-## Prompts
+| Modo | Comando | Efeito |
+|------|---------|--------|
+| Daily | `bash lofi_batch/run_daily.sh` | 1 pacote + tenta upload |
+| Burst | `COUNT=5 bash lofi_batch/run_burst.sh` | N pacotes na fila, **sem** furar o limite diário |
+| Daemon | `bash lofi_batch/run_daemon.sh` | Espera GPU livre e roda daily |
 
-Coloque um arquivo por tema em `lofi_batch/prompts/`:
-
-```bash
-echo "rainy night lo-fi, soft piano, vinyl crackle, no vocals" > lofi_batch/prompts/rainy_night.txt
-```
-
-O nome do arquivo (sem `.txt`) vira o slug da pasta de saída.
-
-## Rodar (Docker)
+## Smoke (sem YouTube)
 
 ```bash
 cd /raid/user_davidoneil/virtual_singer_clip
-
-# defaults: GPU=1, 20 faixas x 180s, DiT xl-turbo
-bash lofi_batch/run_docker.sh
-
-# smoke / teste curto
-TRACKS=2 DURATION=30 GPU=1 bash lofi_batch/run_docker.sh
+TRACKS=2 DURATION=30 SKIP_UPLOAD=1 MODE=daily GPU=1 bash lofi_batch/run_docker.sh
 ```
 
-Ou dentro de um container já aberto:
+## YouTube
+
+Ver [YOUTUBE_SETUP.md](YOUTUBE_SETUP.md). Depois:
 
 ```bash
-python lofi_batch/run_batch.py --tracks 20 --duration 180
+pip install -r lofi_batch/requirements-youtube.txt
+python lofi_batch/youtube_auth.py
+python lofi_batch/youtube_upload.py --dry-run
+YOUTUBE_PRIVACY=unlisted python lofi_batch/youtube_upload.py
 ```
 
 ## Saída
 
 ```text
-output/lofi_batch/<run_id>/<slug>/
-  tracks/01.wav … NN.wav
-  playlist.wav
-  manifest.json
+output/lofi_batch/
+  queue/<run_id>_<slug>/
+    prompt.json, playlist.wav, cover.png, video.mp4, meta.json, …
+  published/<run_id>_<slug>/
+  state.json
 ```
 
-Resume: faixas já existentes são puladas; se `playlist.wav` existe, o prompt é pulado.
+## Prompts manuais (debug)
 
-## Agenda (a cada 3 dias)
+Ainda funciona o caminho antigo com `lofi_batch/prompts/*.txt` via `python lofi_batch/run_batch.py`.
 
-Veja `crontab.example`.
+## Regras do LLM
+
+Edite `lofi_batch/rules/lofi_rules.md` (Lo-Fi clássico + estrutura restritiva tipo odisseu).
+
+## Checklist E2E
+
+1. `PYTHONPATH=. python -m pytest lofi_batch/tests -v`
+2. Smoke Docker com `TRACKS=2 DURATION=30 SKIP_UPLOAD=1`
+3. OAuth uma vez (`youtube_auth.py`)
+4. `--dry-run` no uploader
+5. Upload real com `YOUTUBE_PRIVACY=unlisted`
+6. Confirmar segundo upload no mesmo dia → `skipped_daily_cap`
+7. Burst `COUNT=2` → dois pacotes `ready`, um upload/dia
 
 ## Config
 
-Defaults documentados em `config.env.example` (`GPU`, `TRACKS`, `DURATION`, `CONFIG_PATH`, …).
+Ver `config.env.example`.
