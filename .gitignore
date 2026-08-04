@@ -37,3 +37,6 @@ assets/avatar.mp4
 
 # Git worktrees
 .worktrees/
+
+# Lo-fi YouTube secrets
+lofi_batch/secrets/
