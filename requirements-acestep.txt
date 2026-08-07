@@ -17,3 +17,14 @@ peft>=0.18.0
 python-dotenv
 fastapi>=0.110.0
 uvicorn[standard]>=0.27.0
+# Used by scripts/reference_voice.py (imported by 01_generate_song_acestep.py)
+librosa
+soundfile
+numpy
+# Needed by ACE-Step DiT/VAE load path
+diffusers
+safetensors
+sentencepiece
+accelerate
+huggingface_hub
+

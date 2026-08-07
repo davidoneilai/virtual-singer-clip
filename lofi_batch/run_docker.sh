@@ -1,13 +1,31 @@
 #!/usr/bin/env bash
 # Run Lo-Fi daily/burst pipeline inside a GPU Docker container.
+# Container uses --rm: removes itself when the job exits.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+# Load config.env only for keys not already set in the environment
+if [ -f lofi_batch/config.env ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+      ''|\#*) continue ;;
+    esac
+    key="${line%%=*}"
+    case "$key" in
+      *[!A-Za-z0-9_]*|'') continue ;;
+    esac
+    if [ -z "${!key+x}" ]; then
+      # shellcheck disable=SC2163
+      export "$line"
+    fi
+  done < lofi_batch/config.env
+fi
+
 GPU="${GPU:-1}"
 IMAGE="${IMAGE:-a4898b757eac}"
-CONTAINER="${CONTAINER:-vsc-lofi-batch}"
+CONTAINER="${CONTAINER:-experimento-david}"
 TRACKS="${TRACKS:-20}"
 DURATION="${DURATION:-180}"
 CONFIG_PATH="${CONFIG_PATH:-acestep-v15-xl-turbo}"
@@ -21,20 +39,16 @@ SKIP_UPLOAD="${SKIP_UPLOAD:-1}"
 SKIP_COVER="${SKIP_COVER:-0}"
 SKIP_VIDEO="${SKIP_VIDEO:-0}"
 PROMPT_LLM_MODEL="${PROMPT_LLM_MODEL:-Qwen/Qwen3-4B-Instruct-2507}"
-
-if [ -f lofi_batch/config.env ]; then
-  # shellcheck disable=SC1091
-  set -a
-  source lofi_batch/config.env
-  set +a
-fi
+YOUTUBE_PRIVACY="${YOUTUBE_PRIVACY:-unlisted}"
 
 docker rm -f "$CONTAINER" 2>/dev/null || true
 
-echo "Starting $CONTAINER on GPU $GPU (mode=$MODE count=$COUNT tracks=$TRACKS duration=$DURATION)"
+echo "Starting $CONTAINER on GPU $GPU (mode=$MODE count=$COUNT tracks=$TRACKS duration=$DURATION skip_upload=$SKIP_UPLOAD)"
+echo "Container auto-removes when the job finishes (--rm)."
 
-docker run -d --name "$CONTAINER" \
+docker run -d --rm --name "$CONTAINER" \
   --gpus "device=${GPU}" \
+  -e PYTHONPATH=/workspace \
   -e VSC_CACHE_DIR=/workspace/.cache \
   -e HF_HOME=/workspace/.cache/huggingface \
   -e HUGGINGFACE_HUB_CACHE=/workspace/.cache/huggingface/hub \
@@ -50,15 +64,17 @@ docker run -d --name "$CONTAINER" \
   -e SKIP_COVER="$SKIP_COVER" \
   -e SKIP_VIDEO="$SKIP_VIDEO" \
   -e PROMPT_LLM_MODEL="$PROMPT_LLM_MODEL" \
+  -e YOUTUBE_PRIVACY="$YOUTUBE_PRIVACY" \
   ${RUN_ID:+-e RUN_ID="$RUN_ID"} \
   -w /workspace \
   -v "${ROOT}:/workspace" \
   "$IMAGE" \
   bash -lc '
     set -euo pipefail
+    export PYTHONPATH=/workspace
     mkdir -p output/lofi_batch
     exec > >(tee -a output/lofi_batch/docker_batch.log) 2>&1
-    echo "=== lofi_batch pipeline $(date -Iseconds) mode=${MODE} ==="
+    echo "=== lofi_batch pipeline $(date -Iseconds) mode=${MODE} skip_upload=${SKIP_UPLOAD} tracks=${TRACKS} duration=${DURATION} ==="
 
     if ! command -v ffmpeg >/dev/null 2>&1; then
       apt-get update -qq && apt-get install -y -qq ffmpeg
@@ -68,6 +84,10 @@ docker run -d --name "$CONTAINER" \
       pip install -U pip
       pip install -r requirements.txt
       pip install -r requirements-acestep.txt
+    fi
+
+    if [ "${SKIP_UPLOAD:-1}" != "1" ]; then
+      pip install -q -r lofi_batch/requirements-youtube.txt
     fi
 
     EXTRA=()
@@ -91,6 +111,6 @@ docker run -d --name "$CONTAINER" \
     echo "=== done $(date -Iseconds) ==="
   '
 
-echo "Detached. Follow logs:"
+echo "Detached (auto-rm on exit). Follow logs:"
 echo "  docker logs -f $CONTAINER"
 echo "  tail -f output/lofi_batch/docker_batch.log"

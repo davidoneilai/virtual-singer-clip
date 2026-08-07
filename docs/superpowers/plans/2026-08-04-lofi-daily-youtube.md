@@ -153,18 +153,9 @@ def validate_prompt(data: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(tags, list) or not tags:
         raise ValueError("tags must be a non-empty list")
     out["tags"] = [str(t).strip() for t in tags if str(t).strip()]
-    if "NEGATIVE PROMPT" not in out["music_prompt"].upper().replace(" ", " "):
-        # accept either exact header casing variants
-        if "negative prompt" not in out["music_prompt"].lower():
-            raise ValueError("music_prompt must include a NEGATIVE PROMPT section")
-    return out
-```
-
-Fix the NEGATIVE PROMPT check to a simple casefold:
-
-```python
     if "negative prompt" not in out["music_prompt"].lower():
         raise ValueError("music_prompt must include a NEGATIVE PROMPT section")
+    return out
 ```
 
 - [ ] **Step 4: Write `lofi_batch/rules/lofi_rules.md`**

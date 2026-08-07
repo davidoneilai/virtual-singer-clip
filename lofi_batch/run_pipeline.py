@@ -31,7 +31,6 @@ def build_one_package(
     *,
     out_root: Path,
     run_id: str,
-    *,
     tracks: int,
     duration: int,
     config_path: str,
@@ -70,6 +69,19 @@ def build_one_package(
         backend=backend,
         fail_fast=fail_fast,
     )
+
+    # Free ACE-Step / LM VRAM before Wan cover
+    import gc
+
+    gc.collect()
+    try:
+        import torch
+
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
+    except Exception:
+        pass
 
     cover = package_dir / "cover.png"
     if not skip_cover:

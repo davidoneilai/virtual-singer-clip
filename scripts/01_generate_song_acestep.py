@@ -11,7 +11,11 @@ from reference_voice import resolve_reference_audio
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ace-repo", default="external/ACE-Step-1.5")
+    parser.add_argument(
+        "--ace-repo",
+        default="external/ACE-Step-1.5",
+        help="Local ACE-Step codebase path (not a HuggingFace model id).",
+    )
     parser.add_argument("--lyrics", default="output/lyrics.txt")
     parser.add_argument("--out", default="output/song.wav")
     parser.add_argument("--duration", type=int, default=180)
@@ -22,7 +26,22 @@ def main() -> None:
             "warm bass, pop-rock chorus energy, emotional but danceable, studio quality"
         ),
     )
-    parser.add_argument("--config-path", default="acestep-v15-turbo")
+    parser.add_argument(
+        "--config-path",
+        default="acestep-v15-turbo",
+        help=(
+            "DiT checkpoint name under checkpoints/. "
+            "2B: acestep-v15-turbo | acestep-v15-sft | acestep-v15-base. "
+            "XL 4B: acestep-v15-xl-turbo | acestep-v15-xl-sft | acestep-v15-xl-base. "
+            "Missing XL weights are auto-downloaded on first use."
+        ),
+    )
+    parser.add_argument(
+        "--inference-steps",
+        type=int,
+        default=None,
+        help="Diffusion steps. Default: 8 for *turbo*, 50 for base/sft.",
+    )
     parser.add_argument("--lm-model", default="acestep-5Hz-lm-1.7B")
     parser.add_argument(
         "--backend",
@@ -135,6 +154,12 @@ def main() -> None:
     if reference:
         print(f"ACE-Step reference vocal: {reference}")
 
+    # turbo variants are trained for few-step sampling; base/sft need more steps
+    inference_steps = args.inference_steps
+    if inference_steps is None:
+        inference_steps = 8 if "turbo" in args.config_path.lower() else 50
+    print(f"ACE-Step DiT: {args.config_path} (steps={inference_steps})")
+
     params = GenerationParams(
         task_type="text2music",
         thinking=True,
@@ -142,7 +167,7 @@ def main() -> None:
         lyrics=read_text(args.lyrics),
         vocal_language=args.vocal_language,
         duration=args.duration,
-        inference_steps=8,
+        inference_steps=inference_steps,
         guidance_scale=1.0,
         seed=-1,
         reference_audio=str(reference) if reference else None,

@@ -10,19 +10,59 @@
 lofi_batch/secrets/client_secret.json
 ```
 
-6. Install deps and run the one-time auth flow (needs a browser):
+## Auth on a GPU server (no browser)
+
+**Option A — manual paste (recommended, no SSH tunnel)**
+
+Inside the container / on the server:
 
 ```bash
 pip install -r lofi_batch/requirements-youtube.txt
-python lofi_batch/youtube_auth.py
+python lofi_batch/youtube_auth.py --manual
 ```
 
-7. A `lofi_batch/secrets/token.json` refresh token is written. Keep `secrets/` out of git.
+1. Copy the printed URL into your **laptop browser**.
+2. Log in and click Allow.
+3. The page will fail to load `127.0.0.1` — that is expected.
+4. From the browser address bar, copy the **full URL** (it contains `code=`).
+5. Paste it into the terminal and press Enter.
 
-8. Prefer first real uploads with:
+`lofi_batch/secrets/token.json` is written automatically.
+
+**Option B — SSH tunnel**
+
+On your **laptop**:
 
 ```bash
+ssh -L 8090:127.0.0.1:8090 user@gpu-host
+```
+
+On the **host** (not inside Docker unless you published `-p 8090:8090`):
+
+```bash
+python lofi_batch/youtube_auth.py --no-browser --port 8090
+```
+
+**Option C — Auth on laptop, copy token**
+
+On a machine with a browser (same `client_secret.json`):
+
+```bash
+python lofi_batch/youtube_auth.py
+scp token.json user@gpu-host:/raid/user_davidoneil/virtual_singer_clip/lofi_batch/secrets/token.json
+```
+
+Validate on the server:
+
+```bash
+python lofi_batch/youtube_auth.py --validate-only
+```
+
+## After auth
+
+```bash
+YOUTUBE_PRIVACY=unlisted python lofi_batch/youtube_upload.py --dry-run
 YOUTUBE_PRIVACY=unlisted python lofi_batch/youtube_upload.py
 ```
 
-Then switch to `public` when ready.
+Keep `lofi_batch/secrets/` out of git.
