@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from lofi_batch.generate_prompt import generate_prompt_dict, _qwen_complete  # noqa: E402
+from lofi_batch.generate_prompt import generate_prompt_package, _qwen_complete  # noqa: E402
 from lofi_batch.make_video import make_still_video  # noqa: E402
 from lofi_batch.package import DEFAULT_OUT_ROOT, mark_ready, new_package_dir, write_meta  # noqa: E402
 from lofi_batch.run_batch import process_package_audio  # noqa: E402
@@ -44,7 +44,7 @@ def build_one_package(
     force: bool,
 ) -> Path:
     complete_fn = _qwen_complete(prompt_model)
-    data = generate_prompt_dict(rules_path=rules_path, complete_fn=complete_fn)
+    data = generate_prompt_package(rules_dir=rules_path.parent, complete_fn=complete_fn)
     package_dir = new_package_dir(out_root, run_id, data["slug"])
     (package_dir / "prompt.json").write_text(
         json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
